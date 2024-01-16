@@ -9,6 +9,7 @@
             BirthDate = birthDate;
 
             CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.MinValue;
             Active = true;
         }
 
@@ -16,8 +17,9 @@
         public string Email { get; private set; }
         public DateTime BirthDate { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public bool Active { get; private set; }
-
         public List<Loan> Loans { get; private set; }
+
+        public bool Active { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

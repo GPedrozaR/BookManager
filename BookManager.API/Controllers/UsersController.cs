@@ -1,4 +1,5 @@
 ﻿using BookManager.Application.Services.Interfaces;
+using BookManager.Application.ViewModels.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookManager.API.Controllers
@@ -14,9 +15,51 @@ namespace BookManager.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get(string query)
+        public IActionResult GetAllUsers(string query)
         {
-            return Ok();
+            var users = _userService.GetAll(query);
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetUserById(int id)
+        {
+            var user = _userService.GetById(id);
+            return user is null ? NotFound() : Ok(user);
+        }
+
+        [HttpPost]
+        public IActionResult RegisterNewUser([FromBody] NewUserInputModel inputModel)
+        {
+            var id = _userService.Create(inputModel);
+
+            return CreatedAtAction(nameof(GetUserById), new { id }, inputModel);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateUser(int id, [FromBody] UpdateUserInputModel inputModel)
+        {
+            var user = _userService.GetById(id);
+
+            if (user is null)
+                return NotFound();
+
+            _userService.Update(inputModel);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUserById(int id)
+        {
+            var user = _userService.GetById(id);
+
+            if (user is null)
+                return NotFound();
+
+            _userService.Delete(id);
+
+            return NoContent();
         }
     }
 }
