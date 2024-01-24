@@ -13,9 +13,9 @@
             Active = true;
         }
 
-        public string Name { get; private set; }
-        public string Email { get; private set; }
-        public DateTime BirthDate { get; private set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public DateTime BirthDate { get; set; }
         public DateTime CreatedAt { get; private set; }
         public List<Loan> Loans { get; private set; }
 

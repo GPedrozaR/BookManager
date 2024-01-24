@@ -1,6 +1,7 @@
-using BookManager.Application.Services.Implementations;
-using BookManager.Application.Services.Interfaces;
+using BookManager.Application.Commands.Book.CreateBook;
+using BookManager.Core.Repositories;
 using BookManager.Infrastructure.Persistence;
+using BookManager.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +15,12 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("BookManagerCs");
 builder.Services.AddDbContext<BookManagerDbContext>(p => p.UseSqlServer(connectionString));
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ILoanService, LoanService>();
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddMediatR(op => op.RegisterServicesFromAssemblyContaining(typeof(CreateBookCommand)));
+
 
 var app = builder.Build();
 

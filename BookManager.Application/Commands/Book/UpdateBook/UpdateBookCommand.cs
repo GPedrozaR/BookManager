@@ -1,7 +1,10 @@
-﻿namespace BookManager.Application.ViewModels.Book
+﻿using MediatR;
+
+namespace BookManager.Application.Commands.Book.UpdateBook
 {
-    public class NewBookInputModel
+    public class UpdateBookCommand : IRequest
     {
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Author { get; set; }
         public string Isbn { get; set; }

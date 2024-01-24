@@ -1,5 +1,9 @@
-﻿using BookManager.Application.Services.Interfaces;
-using BookManager.Application.ViewModels.User;
+﻿using BookManager.Application.Commands.User.CreateUser;
+using BookManager.Application.Commands.User.DeleteUser;
+using BookManager.Application.Commands.User.UpdateUser;
+using BookManager.Application.Queries.User.GetAllUsers;
+using BookManager.Application.Queries.User.GetUserById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookManager.API.Controllers
@@ -7,58 +11,51 @@ namespace BookManager.API.Controllers
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
+        private readonly IMediator _mediator;
+        public UsersController(IMediator mediator)
         {
-            _userService = userService;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public IActionResult GetAllUsers(string query)
+        public async Task<IActionResult> GetAllUsers(string query)
         {
-            var users = _userService.GetAll(query);
+            var command = new GetAllUsersQuery(query);
+            var users = await _mediator.Send(command);
+
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            var user = _userService.GetById(id);
-            return user is null ? NotFound() : Ok(user);
+            var command = new GetUserByIdQuery(id);
+            var user = await _mediator.Send(command);
+
+            return user is null
+                ? NotFound()
+                : Ok(user);
         }
 
         [HttpPost]
-        public IActionResult RegisterNewUser([FromBody] NewUserInputModel inputModel)
+        public async Task<IActionResult> CreateNewUser([FromBody] CreateUserCommand command)
         {
-            var id = _userService.Create(inputModel);
-
-            return CreatedAtAction(nameof(GetUserById), new { id }, inputModel);
+            var id = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetUserById), new { id }, command);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] UpdateUserInputModel inputModel)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UpdateUserCommand command)
         {
-            var user = _userService.GetById(id);
-
-            if (user is null)
-                return NotFound();
-
-            _userService.Update(inputModel);
-
+            await _mediator.Send(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUserById(int id)
+        public async Task<IActionResult> DeleteUserById(int id)
         {
-            var user = _userService.GetById(id);
-
-            if (user is null)
-                return NotFound();
-
-            _userService.Delete(id);
-
+            var deleteUser = new DeleteUserCommand(id);
+            await _mediator.Send(deleteUser);
             return NoContent();
         }
     }

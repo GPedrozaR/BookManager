@@ -1,16 +1,13 @@
-﻿using BookManager.Application.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace BookManager.API.Controllers
 {
     [Route("api/loans")]
     public class LoansController : ControllerBase
     {
-        private readonly ILoanService _loanService;
 
-        public LoansController(ILoanService loanService)
+        public LoansController()
         {
-            _loanService = loanService;
         }
 
         [HttpGet]

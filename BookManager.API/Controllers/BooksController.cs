@@ -1,5 +1,9 @@
-﻿using BookManager.Application.Services.Interfaces;
-using BookManager.Application.ViewModels.Book;
+﻿using BookManager.Application.Commands.Book.CreateBook;
+using BookManager.Application.Commands.Book.DeleteBook;
+using BookManager.Application.Commands.Book.UpdateBook;
+using BookManager.Application.Queries.Book.GetAllBooks;
+using BookManager.Application.Queries.Book.GetBookById;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookManager.API.Controllers
@@ -7,57 +11,48 @@ namespace BookManager.API.Controllers
     [Route("api/books")]
     public class BooksController : ControllerBase
     {
-        private readonly IBookService _bookService;
-
-        public BooksController(IBookService bookService)
+        private readonly IMediator _mediator;
+        public BooksController(IMediator mediator)
         {
-            _bookService = bookService;
+            _mediator = mediator;
         }
 
         [HttpGet]
-        public IActionResult GetAllBooks(string query)
+        public async Task<IActionResult> GetAllBooks(string query)
         {
-            var books = _bookService.GetAll(query);
+            var command = new GetAllBooksQuery(query);
+            var books = await _mediator.Send(command);
+
             return Ok(books);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetBookById(int id)
+        public async Task<IActionResult> GetBookById(int id)
         {
-            var book = _bookService.GetById(id);
+            var command = new GetBookByIdQuery(id);
+            var book = await _mediator.Send(command);
             return book is null ? NotFound() : Ok(book);
         }
 
         [HttpPost]
-        public IActionResult RegisterNewBook([FromBody] NewBookInputModel inputModel)
+        public async Task<IActionResult> RegisterNewBook([FromBody] CreateBookCommand command)
         {
-            var id = _bookService.Create(inputModel);
-
-            return CreatedAtAction(nameof(GetBookById), new { id }, inputModel);
+            var id = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetBookById), new { id }, command);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateBook(int id, [FromBody] UpdateBookInputModel inputModel)
+        public async Task<IActionResult> UpdateBook(int id, [FromBody] UpdateBookCommand command)
         {
-            var book = _bookService.GetById(id);
-
-            if (book is null)
-                return NotFound();
-
-            _bookService.Update(inputModel);
-
+            await _mediator.Send(command);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteBookById(int id)
+        public async Task<IActionResult> DeleteBookById(int id)
         {
-            var book = _bookService.GetById(id);
-
-            if (book is null)
-                return NotFound();
-
-            _bookService.Delete(id);
+            var deleteBook = new DeleteBookCommand(id);
+            await _mediator.Send(deleteBook);
 
             return NoContent();
         }

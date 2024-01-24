@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookManager.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BookManagerDbContext))]
-    [Migration("20240116135016_InitialMigration")]
+    [Migration("20240123152848_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -118,6 +118,9 @@ namespace BookManager.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
