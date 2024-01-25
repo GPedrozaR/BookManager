@@ -12,8 +12,10 @@
 
 ## Tecnologias
 
- - ASP. NET Core 8.0
+ - C#
+ - ASP.NET Core 8.0
  - Entity Framework Core V8.0.1
+ - SQL Server
 
 ## Padrões e práticas
 
