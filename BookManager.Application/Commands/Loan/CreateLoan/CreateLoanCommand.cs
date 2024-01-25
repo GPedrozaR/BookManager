@@ -1,9 +1,11 @@
-﻿namespace BookManager.Application.Commands.Loan.CreateLoan
+﻿using MediatR;
+
+namespace BookManager.Application.Commands.Loan.CreateLoan
 {
-    internal class CreateLoanCommand
+    public class CreateLoanCommand : IRequest<int>
     {
-        public int IdUser { get; private set; }
-        public int IdBook { get; private set; }
-        public int LoanDays { get; private set; }
+        public int IdUser { get; set; }
+        public int IdBook { get; set; }
+        public int LoanDays { get; set; }
     }
 }

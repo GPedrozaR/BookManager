@@ -15,8 +15,4 @@
     <ProjectReference Include="..\BookManager.Infrastructure\BookManager.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Queries\Loan\" />
-  </ItemGroup>
-
 </Project>

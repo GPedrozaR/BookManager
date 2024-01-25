@@ -9,7 +9,7 @@
             LoanDays = loanDays;
             LoanDate = loanDate;
         }
-
+         
         public int IdUser { get; private set; }
         public int IdBook { get; private set; }
         public int LoanDays { get; private set; }

@@ -13,7 +13,7 @@ namespace BookManager.Application.Commands.User.CreateUser
 
         public async Task<int> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new Core.Entities.User(request.Name, request.Email, request.BirthDate, request.Password, request.Role);
+            var user = new Core.Entities.User(request.Name, request.Email, request.BirthDate);
 
             await _userRepository.AddUserAsync(user);
 

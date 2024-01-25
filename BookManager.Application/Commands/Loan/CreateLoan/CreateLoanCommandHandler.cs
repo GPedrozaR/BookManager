@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BookManager.Core.Repositories;
+using MediatR;
 
 namespace BookManager.Application.Commands.Loan.CreateLoan
 {
-    internal class CreateLoanCommandHandler
+    public class CreateLoanCommandHandler : IRequestHandler<CreateLoanCommand, int>
     {
+        private readonly ILoanRepository _loanRepository;
+
+        public CreateLoanCommandHandler(ILoanRepository loanRepository)
+        {
+            _loanRepository = loanRepository;
+        }
+
+        public async Task<int> Handle(CreateLoanCommand request, CancellationToken cancellationToken)
+        {
+            var loan = new Core.Entities.Loan(request.IdUser, request.IdBook, request.LoanDays);
+
+            await _loanRepository.AddLoanAsync(loan);
+
+            return loan.Id;
+        }
     }
 }

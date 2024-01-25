@@ -1,5 +1,6 @@
 ﻿using BookManager.Core.Entities;
 using BookManager.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookManager.Infrastructure.Persistence.Repositories
 {
@@ -20,6 +21,11 @@ namespace BookManager.Infrastructure.Persistence.Repositories
         {
             await _dbContext.Loans.AddAsync(loan);
             await SaveChangesAsync();
+        }
+
+        public async Task<Loan> GetLoanByIdAsync(int id)
+        {
+            return await _dbContext.Loans.SingleOrDefaultAsync(b => b.Id == id);
         }
     }
 }
