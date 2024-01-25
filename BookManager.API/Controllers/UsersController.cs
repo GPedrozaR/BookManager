@@ -40,6 +40,16 @@ namespace BookManager.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateNewUser([FromBody] CreateUserCommand command)
         {
+            if (!ModelState.IsValid)
+            {
+                var messages = ModelState
+                    .SelectMany(ms => ms.Value.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList(); 
+
+                return BadRequest(messages);
+            }
+
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetUserById), new { id }, command);
         }

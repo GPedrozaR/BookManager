@@ -16,6 +16,7 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public DateTime BirthDate { get; set; }
+
         public DateTime CreatedAt { get; private set; }
         public List<Loan> Loans { get; private set; }
 
